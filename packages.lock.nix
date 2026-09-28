@@ -69,6 +69,11 @@
     url = "https://download.gnome.org/sources/libxml2/2.11/libxml2-2.11.5.tar.xz";
     sha256 = "3727b078c360ec69fa869de14bd6f75d7ee8d36987b071e6928d4720a28df3a6";
   };
+  lua = {
+    version = "5.2.4";
+    url = "https://www.lua.org/ftp/lua-5.2.4.tar.gz";
+    sha256 = "b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b";
+  };
   mbedtls = {
     version = "3.4.1";
     url = "https://github.com/Mbed-TLS/mbedtls/archive/refs/tags/v3.4.1.tar.gz";

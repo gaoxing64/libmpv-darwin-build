@@ -1,0 +1,53 @@
+#!/bin/sh -e
+
+# Lua has no configure script and only supports in-source builds. Mirror the
+# sources into the (writable) meson build directory and generate a Makefile
+# there; meson's unstable-external_project module then drives `make` and
+# `make install` (which is passed through DESTDIR).
+
+for arg in "$@"; do
+	case "$arg" in
+		--prefix=*) prefix="${arg#--prefix=}" ;;
+		--libdir=*) libdir="${arg#--libdir=}" ;;
+	esac
+done
+
+prefix="${prefix:-/usr/local}"
+libdir="${libdir:-${prefix}/lib}"
+srcdir="$(cd "$(dirname "$0")" && pwd)"
+
+rm -rf src
+mkdir -p src
+cp -R "${srcdir}/src/." src/
+
+cat > lua.pc <<PC
+prefix=${prefix}
+libdir=${libdir}
+includedir=${prefix}/include
+
+Name: Lua
+Description: An Extensible Extension Language
+Version: 5.2.4
+Libs: -L\${libdir} -llua
+Libs.private: -lm
+Cflags: -I\${includedir}
+PC
+
+cat > Makefile <<MAKEFILE
+CC = ${CC:-cc}
+AR = ${AR:-ar}
+RANLIB = ${RANLIB:-ranlib}
+PREFIX = ${prefix}
+LIBDIR = ${libdir}
+MYCFLAGS = ${CFLAGS} -fPIC -DLUA_USE_POSIX
+
+all:
+	\$(MAKE) -C src liblua.a \\
+		CC="\$(CC)" AR="\$(AR) rcs" RANLIB="\$(RANLIB)" MYCFLAGS="\$(MYCFLAGS)"
+
+install:
+	mkdir -p \$(DESTDIR)\$(PREFIX)/include \$(DESTDIR)\$(LIBDIR)/pkgconfig
+	cp src/lua.h src/luaconf.h src/lualib.h src/lauxlib.h \$(DESTDIR)\$(PREFIX)/include/
+	cp src/liblua.a \$(DESTDIR)\$(LIBDIR)/
+	cp lua.pc \$(DESTDIR)\$(LIBDIR)/pkgconfig/
+MAKEFILE

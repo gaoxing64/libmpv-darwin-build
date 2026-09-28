@@ -26,6 +26,7 @@ let
   ffmpeg = callPackage ../mk-pkg-ffmpeg/default.nix { };
   uchardet = callPackage ../mk-pkg-uchardet/default.nix { };
   libass = callPackage ../mk-pkg-libass/default.nix { };
+  lua = callPackage ../mk-pkg-lua/default.nix { };
 
   nativeBuildInputs = [
     pkgs.meson
@@ -70,7 +71,7 @@ pkgs.stdenvNoCC.mkDerivation {
   enableParallelBuilding = true;
   inherit nativeBuildInputs;
   buildInputs =
-    [ ffmpeg ]
+    [ ffmpeg lua ]
     ++ pkgs.lib.optionals (variant == "video") [
       uchardet
       libass
@@ -198,6 +199,7 @@ pkgs.stdenvNoCC.mkDerivation {
 
       `# misc features`
       -Diconv=enabled `# iconv`
+      -Dlua=enabled `# Lua`
     )
 
     COMMON_VIDEO_OPTIONS=(
