@@ -50,7 +50,7 @@ pkgs.stdenvNoCC.mkDerivation {
       --prefix=$out
   '';
   buildPhase = ''
-    meson compile -vC build
+    meson compile -vC build $(basename $src)
   '';
   installPhase = ''
     # manual install to preserve symlinks (meson install -C build)
