@@ -16,6 +16,18 @@ prefix="${prefix:-/usr/local}"
 libdir="${libdir:-${prefix}/lib}"
 srcdir="$(cd "$(dirname "$0")" && pwd)"
 
+# `ar`/`ranlib` are not on PATH inside the Nix build sandbox. The cross file
+# points every tool at Xcode's toolchain directory, which is also where CC
+# lives, so resolve them relative to CC.
+ar="${AR:-}"
+ranlib="${RANLIB:-}"
+if [ -n "$CC" ]; then
+	[ -n "$ar" ] || ar="${CC%/*}/ar"
+	[ -n "$ranlib" ] || ranlib="${CC%/*}/ranlib"
+fi
+ar="${ar:-ar}"
+ranlib="${ranlib:-ranlib}"
+
 rm -rf src
 mkdir -p src
 cp -R "${srcdir}/src/." src/
@@ -35,8 +47,8 @@ PC
 
 cat > Makefile <<MAKEFILE
 CC = ${CC:-cc}
-AR = ${AR:-ar}
-RANLIB = ${RANLIB:-ranlib}
+AR = ${ar}
+RANLIB = ${ranlib}
 PREFIX = ${prefix}
 LIBDIR = ${libdir}
 MYCFLAGS = ${CFLAGS} -fPIC -DLUA_USE_POSIX
