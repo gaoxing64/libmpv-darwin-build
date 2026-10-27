@@ -1,0 +1,18 @@
+diff --git a/player/lua/stats.lua b/player/lua/stats.lua
+index 9a33815..3e03c7e 100644
+--- a/player/lua/stats.lua
++++ b/player/lua/stats.lua
+@@ -1177,6 +1177,13 @@ for k, _ in pairs(pages) do
+             curr_page = k
+             process_key_binding(true)
+         end, {repeatable=true})
++
++    -- Toggle bindings for a specific page: "h script-binding stats/display-page-2-toggle"
++    mp.add_key_binding(nil, "display-page-" .. k .. "-toggle",
++        function()
++            curr_page = k
++            process_key_binding(false)
++        end, {repeatable=false})
+ end
+ 
+ -- Reprint stats immediately when VO was reconfigured, only when toggled

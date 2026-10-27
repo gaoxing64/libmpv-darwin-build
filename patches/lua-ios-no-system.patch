@@ -1,0 +1,23 @@
+diff --git a/src/loslib.c b/src/loslib.c
+index 052ba17..2597a37 100644
+--- a/src/loslib.c
++++ b/src/loslib.c
+@@ -78,6 +78,10 @@
+ 
+ 
+ static int os_execute (lua_State *L) {
++#if defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
++  /* iOS has no fork/exec, so system() is unavailable in the SDK. */
++  return luaL_error(L, "os.execute not supported on iOS");
++#else
+   const char *cmd = luaL_optstring(L, 1, NULL);
+   int stat = system(cmd);
+   if (cmd != NULL)
+@@ -86,6 +90,7 @@ static int os_execute (lua_State *L) {
+     lua_pushboolean(L, stat);  /* true if there is a shell */
+     return 1;
+   }
++#endif
+ }
+ 
+ 

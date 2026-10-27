@@ -72,6 +72,38 @@ jobs:
           echo \"$VERSION\" > nix/utils/default/version.nix
           nix build -v
 
+      - name: Verify libmpv feature set
+        run: |
+          set -euo pipefail
+          # Unpack the macOS/iOS video artifacts and assert the shipped dylibs
+          # really contain H.265/AV1, stats.lua and the loudnorm filter chain.
+          shopt -s nullglob
+          archives=(result/*.tar.gz)
+          if ((${#archives[@]} == 0)); then
+            echo "No archives were produced."
+            exit 1
+          fi
+          mkdir -p verify
+          for archive in "${archives[@]}"; do
+            name=$(basename "$archive" .tar.gz)
+            case "$name" in
+              *-video-*) ;;
+              *) continue ;;
+            esac
+            dir="verify/$name"
+            mkdir -p "$dir"
+            tar -xzf "$archive" -C "$dir"
+            dylib=$(find "$dir" -name 'libmpv*.dylib' -type f | head -n1)
+            if [[ -z "$dylib" ]]; then
+              echo "ERROR: no libmpv dylib in $name"
+              exit 1
+            fi
+            # AV1 parser cannot be told apart from the decoder name inside the
+            # binary, so assert the flag in the FFmpeg build recipe as well.
+            sh scripts/verify_libmpv_artifacts.sh \
+              --config-source nix/packages/mk-pkg-ffmpeg/meson.build \
+              "$dylib" "$name"          done
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

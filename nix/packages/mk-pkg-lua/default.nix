@@ -27,6 +27,8 @@ let
     cp ${./configure} $src/configure
     chmod +x $src/configure
 
+    patch -p1 -d $src <${../../../patches/lua-ios-no-system.patch}
+
     cp -r $src $out
   '';
 in

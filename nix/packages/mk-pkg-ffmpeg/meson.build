@@ -222,6 +222,7 @@ video_default_options = [
     '--enable-parser=h263',
     '--enable-parser=h264',
     '--enable-parser=hevc',
+    '--enable-parser=av1',
     # '--enable-parser=mpeg4', # WARNING: Option --enable-parser=mpeg4 did not match anything
     '--enable-parser=mpeg4video',
     '--enable-parser=mpegvideo',
