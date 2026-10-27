@@ -1,18 +1,39 @@
 diff --git a/player/lua/stats.lua b/player/lua/stats.lua
-index 9a33815..3e03c7e 100644
+index 9a33815..da12b05 100644
 --- a/player/lua/stats.lua
 +++ b/player/lua/stats.lua
-@@ -1177,6 +1177,13 @@ for k, _ in pairs(pages) do
-             curr_page = k
-             process_key_binding(true)
+@@ -1179,6 +1179,34 @@ for k, _ in pairs(pages) do
          end, {repeatable=true})
-+
-+    -- Toggle bindings for a specific page: "h script-binding stats/display-page-2-toggle"
-+    mp.add_key_binding(nil, "display-page-" .. k .. "-toggle",
-+        function()
-+            curr_page = k
-+            process_key_binding(false)
-+        end, {repeatable=false})
  end
  
++-- Toggle bindings for a specific page: "h script-binding stats/display-page-2-toggle".
++-- The names are spelled out literally (instead of being concatenated at
++-- runtime) so every binding can be resolved by its exact name.
++mp.add_key_binding(nil, "display-page-1-toggle", function()
++    curr_page = o.key_page_1
++    process_key_binding(false)
++end, {repeatable=false})
++
++mp.add_key_binding(nil, "display-page-2-toggle", function()
++    curr_page = o.key_page_2
++    process_key_binding(false)
++end, {repeatable=false})
++
++mp.add_key_binding(nil, "display-page-3-toggle", function()
++    curr_page = o.key_page_3
++    process_key_binding(false)
++end, {repeatable=false})
++
++mp.add_key_binding(nil, "display-page-4-toggle", function()
++    curr_page = o.key_page_4
++    process_key_binding(false)
++end, {repeatable=false})
++
++mp.add_key_binding(nil, "display-page-0-toggle", function()
++    curr_page = o.key_page_0
++    process_key_binding(false)
++end, {repeatable=false})
++
  -- Reprint stats immediately when VO was reconfigured, only when toggled
+ mp.register_event("video-reconfig",
+     function()
