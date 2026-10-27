@@ -93,16 +93,16 @@ jobs:
             dir="verify/$name"
             mkdir -p "$dir"
             tar -xzf "$archive" -C "$dir"
-            dylib=$(find "$dir" -name 'libmpv*.dylib' -type f | head -n1)
-            if [[ -z "$dylib" ]]; then
+            if ! find "$dir" -name 'libmpv*.dylib' -type f | grep -q .; then
               echo "ERROR: no libmpv dylib in $name"
               exit 1
             fi
             # AV1 parser cannot be told apart from the decoder name inside the
             # binary, so assert the flag in the FFmpeg build recipe as well.
+            # The archive ships libmpv plus its sibling dylibs; scan them all.
             sh scripts/verify_libmpv_artifacts.sh \
               --config-source nix/packages/mk-pkg-ffmpeg/meson.build \
-              "$dylib" "$name"
+              "$dir" "$name"
           done
 
       - name: Upload artifacts
