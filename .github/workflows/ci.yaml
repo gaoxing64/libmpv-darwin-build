@@ -93,8 +93,11 @@ jobs:
             dir="verify/$name"
             mkdir -p "$dir"
             tar -xzf "$archive" -C "$dir"
-            if ! find "$dir" -name 'libmpv*.dylib' -type f | grep -q .; then
+            # libs packages ship libmpv*.dylib; xcframeworks packages nest the
+            # dylib inside a Mpv.framework bundle where it is named "Mpv".
+            if ! find "$dir" \( -name 'libmpv*.dylib' -o -name 'Mpv' \) -type f | grep -q .; then
               echo "ERROR: no libmpv dylib in $name"
+              find "$dir" -type f | head -n5
               exit 1
             fi
             # AV1 parser cannot be told apart from the decoder name inside the
