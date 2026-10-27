@@ -68,7 +68,8 @@ echo "artifact: $label"
 # as present.
 scan_paths=""
 if [ -d "$binary" ]; then
-	scan_paths=$(find "$binary" \( -name '*.dylib' -o -name '*.so' -o -name '*.dll' \) -type f)
+	# Framework packages nest the dylib as "Mpv" inside Mpv.framework/Versions/A.
+	scan_paths=$(find "$binary" \( -name '*.dylib' -o -name 'Mpv' -o -name '*.so' -o -name '*.dll' \) -type f)
 else
 	scan_paths="$binary"
 fi
