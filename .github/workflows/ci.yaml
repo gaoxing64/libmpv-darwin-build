@@ -102,7 +102,8 @@ jobs:
             # binary, so assert the flag in the FFmpeg build recipe as well.
             sh scripts/verify_libmpv_artifacts.sh \
               --config-source nix/packages/mk-pkg-ffmpeg/meson.build \
-              "$dylib" "$name"          done
+              "$dylib" "$name"
+          done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
