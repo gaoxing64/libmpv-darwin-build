@@ -42,7 +42,7 @@ CI：`.github/workflows/ci.yaml`，tag 触发发布。
 ## 4. 已知限制
 
 - 无法在 Windows 开发机执行；以上用例需 macOS runner 或真机。
-- 没有自动化断言脚本；建议把 TC-D-05/06 写成 CI step（见 backlog P0-1）。
+- 已把 TC-D-06 写成 CI step（`Verify libmpv feature set`），解包产物目录后逐个 dylib 断言。
 
 ## 历史锚点
 
