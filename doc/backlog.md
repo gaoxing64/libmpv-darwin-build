@@ -28,6 +28,9 @@
 | P2-1 | 产物哈希靠人工同步到 media-kit | `media-kit/libs/{macos,ios}` | 发布后自动开 PR 更新下载锁 |
 | P2-2 | 依赖版本分散在 `packages.lock.nix` 与 flake.lock | `packages.lock.nix`、`flake.lock` | 提供 bump 脚本/清单 |
 | P2-3 | Nix 构建日志未归档 | `ci.yaml` 仅上传产物 | 失败时上传 `configure.log` |
+| P2-4 | mpv 0.36 的 stats.lua 缺 `display-page-N-toggle`，靠补丁补齐；升 mpv 后补丁会失效 | `patches/mpv-stats-page-toggle.patch` | 升 mpv 时删补丁并确认新版自带该绑定；补丁里的绑定名必须是字面量（运行时拼接在二进制里查不到） |
+| P2-5 | 产物有两种布局：libs 是散装 dylib，xcframeworks 是 framework bundle（dylib 名为 `Mpv`） | `nix/packages/mk-out-frameworks/*/build-*.sh` | 校验脚本要同时匹配 `libmpv*.dylib` 与 `Mpv` |
+| P2-6 | Lua 5.2.4 的 `loslib.c` 在 iOS 调 `system()`，SDK 不可用 | `patches/lua-ios-no-system.patch` | 升 Lua 时重放补丁 |
 
 ## 已决策取舍
 
